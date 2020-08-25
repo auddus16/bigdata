@@ -6,6 +6,7 @@ import numpy as np
 import pandas as pd
 
 app=Flask(__name__)
+
 kind = pd.read_csv("testDogKind.csv")
 kindCd = pd.read_csv("kindCd.csv")
 
@@ -27,6 +28,12 @@ sex_list = np.array(['F', 'M', 'Q'])
 neuter_list = neuter_list.reshape(3)
 sex_list = sex_list.reshape(3)
 kindCd = kindCd.reshape(177)
+
+def kindDict(kind_):
+    for cd, num in kind_dict.items():
+        if (kind_ == cd):
+            kind_ = num
+            return kind_
 
 def onehot_encoding(test):
     # kindNum을 원핫 인코딩
@@ -67,7 +74,7 @@ def index():
         return render_template('index.html')
     if request.method=='POST':
         # 배추 가격을 결정하는 4가지 변화 요인을 입력받습니다.
-        kind = request.form['kind']
+        kindName = request.form['kindName']
         neuter = request.form['neuter']
         sex = request.form['sex']
         weight = float(request.form['weight'])
@@ -75,26 +82,21 @@ def index():
         age = float(request.form['age'])
 
 
-
     #입력받은 데이터를 받아서 학습모델에 대입할 데이터를 만듭니다.
-    test = {'kindNum': [kindDict(kind)], 'neuterYn': [neuter], 'sexCd': [sex], 'weight': [weight], 'noticeDays': [notice],
+    test = {'kindNum': [kindDict(kindName)], 'neuterYn': [neuter], 'sexCd': [sex], 'weight': [weight], 'noticeDays': [notice],
             'age2': [age]}
     test = pd.DataFrame(test)
-    test= onehot_encoding(test)
+    test = onehot_encoding(test)
 
-    new_data=np.array(test, dtype=np.float64)
+    new_data = np.array(test, dtype=np.float64)
 
-    result=sess.run(y, feed_dict={X:new_data})
+    result = sess.run(y, feed_dict={X:new_data})
 
-    adopt=result[0]
+    adopt = result[0]
 
     return render_template('index.html', adopt=adopt)
 
-def kindDict(kind):
-    for cd, num in kind_dict.items():
-        if (kind == cd):
-            kind = num
-            return kind
+
 
 if __name__=='__main__':
     app.run(debug=True)
