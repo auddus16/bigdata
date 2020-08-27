@@ -98,7 +98,7 @@ def make_prediction():
 
         result = sess.run(y, feed_dict={X: new_data})
 
-        adopt = result[0]
+        adopt = result[0] * 100
 
         return render_template('index.html', adopt=adopt)
 
