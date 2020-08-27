@@ -19,7 +19,7 @@ def onehot_encoding(test, list, col):
     list = pd.concat((pd.get_dummies(col, columns=list), pd.DataFrame(columns=list))).fillna(0)
     # test.drop(['kindNum'], axis='columns', inplace=True)
     test = pd.concat([test, list], axis=1)
-    return list
+    return test
 
     # neuter_list = pd.concat(
     #     (pd.get_dummies(test.neuterYn, columns=neuter_list), pd.DataFrame(columns=neuter_list))).fillna(0)
