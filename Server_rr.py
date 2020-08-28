@@ -10,7 +10,7 @@ import pandas as pd
 
 app=Flask(__name__)
 
-model = keras.models.load_model('l2_model')
+
 
 def kindDict(kind_, kind_dict):
     for cd, num in kind_dict.items():
@@ -58,16 +58,10 @@ def make_prediction():
         sex_list = sex_list.reshape(3)
         kindCd = kindCd.reshape(177)
 
-        # def kindDict(kind_):
-        #     for cd, num in kind_dict.items():
-        #         if (kind_ == cd):
-        #             kind_ = num
-        #             return kind_
-
         test_dict = {'kindNum': [kindDict(kindName, kind_dict)], 'neuterYn': [neuter], 'sexCd': [sex], 'weight': [weight],
                      'noticeDays': [notice],
                      'age2': [age]}
-        # test=pd.DataFrame(data=np.array([[kindDict(kindName)],[neuter],[sex],[weight],[notice],[age]]), columns=['kindNum', 'neuter','sexCd','weight','noticeDays', 'age'])
+
         test = pd.DataFrame(test_dict)
 
         kindCd = pd.concat((pd.get_dummies(test.kindNum, columns=kindCd), pd.DataFrame(columns=kindCd))).fillna(0)
@@ -83,13 +77,11 @@ def make_prediction():
         test.drop(['sexCd'], axis='columns', inplace=True)
         test = pd.concat([test, sex_list], axis=1)
 
-        # new_data = np.array(test, dtype=np.float64)
-
+        model = keras.models.load_model('l2_model')
         result = model.predict(test)
-
         adopt = result[0] * 100
 
-        return render_template('index.html', adopt=adopt)
+        return render_template('index.html', adopt=np.round(adopt, 2))
 
 if __name__ == '__main__':
     app.run(debug=True)
