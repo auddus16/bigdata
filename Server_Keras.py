@@ -10,8 +10,6 @@ import pandas as pd
 
 app=Flask(__name__)
 
-
-
 def kindDict(kind_, kind_dict):
     for cd, num in kind_dict.items():
         if (kind_ == cd):
