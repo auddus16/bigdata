@@ -1,2 +1,2 @@
-model_checkpoint_path: "dog.ckpt"
-all_model_checkpoint_paths: "dog.ckpt"
+model_checkpoint_path: "dogtensor2.ckpt"
+all_model_checkpoint_paths: "dogtensor2.ckpt"
