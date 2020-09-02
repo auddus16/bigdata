@@ -10,7 +10,7 @@ import pandas as pd
 
 app=Flask(__name__)
 
-def kindDict(kind_, kind_dict):
+def kindDict(kind_, kind_dict): #사용자에게 입력받은 품종에 해당하는 품종코드 리턴
     for cd, num in kind_dict.items():
         if (kind_ == cd):
             kind_ = num
@@ -27,6 +27,7 @@ def index():
 def make_prediction():
     if request.method == 'POST':
 
+        #사용자에게 입력받기
         kindName = request.form['kindName']
         neuter = request.form['neuter']
         sex = request.form['sex']
@@ -48,6 +49,7 @@ def make_prediction():
         for i in range(len(kind2)):
             kind_dict[kind1[i]] = kind2[i]
 
+        #원-핫 인코딩
         kindCd = np.array(kindCd_data, dtype=np.float64)
         neuter_list = np.array(['N', 'U', 'Y'])
         sex_list = np.array(['F', 'M', 'Q'])
@@ -75,7 +77,8 @@ def make_prediction():
         test.drop(['sexCd'], axis='columns', inplace=True)
         test = pd.concat([test, sex_list], axis=1)
 
-        model = keras.models.load_model('l2_model')
+        #예측모델 불러오기
+        model = keras.models.load_model('l2_model_Nadam')
         result = model.predict(test)
         adopt = result[0] * 100
 
